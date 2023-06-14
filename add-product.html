@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Product</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="add-product-modal">
+    <div class="modal-content">
+        <form id="product-form">
+            <label>SKU:</label>
+            <input type="text" id="sku" required>
+
+            <label>Name:</label>
+            <input type="text" id="name" required>
+
+            <label>Price:</label>
+            <input type="number" id="price" required>
+
+            <label>Product Type:</label>
+            <select id="productType">
+                <option value="DVD">DVD</option>
+                <option value="Book">Book</option>
+                <option value="Furniture">Furniture</option>
+            </select>
+
+            <div id="additional-fields">
+                <label>Additional Attribute:</label>
+                <div id="additional-attribute"></div>
+            </div>
+
+            <button type="submit">Save</button>
+            <button type="button" onclick="closeAddProductModal()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="src/script.js"></script>
+</body>
+</html>
