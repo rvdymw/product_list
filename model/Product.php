@@ -39,5 +39,5 @@ abstract class Product
 
     abstract public function displayAdditionalInfo();
 
-    abstract public function save();
+    abstract public function save($product);
 }

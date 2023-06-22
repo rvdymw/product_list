@@ -23,9 +23,14 @@ class Book extends Product
         return 'Weight: ' . $this->weight . ' Kg';
     }
 
-    public function save()
+    public function save($product)
     {
-        $database = new Database();
-        $database->saveBook($this->sku, $this->name, $this->price, $this->weight);
+        $sku = $product['sku'];
+        $name = $product['name'];
+        $price = $product['price'];
+        $type = $product['productType'];
+        $weight = $product['weight'];
+
+        return "INSERT INTO products (sku, name, price, type, weight) VALUES ('$sku', '$name', '$price', '$type', '$weight')";
     }
 }
