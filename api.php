@@ -1,9 +1,13 @@
 <?php
 
+require 'model\Product.php';
+require 'model\DVD.php';
+require 'model\Book.php';
+require 'model\Furniture.php';
 require 'Database.php';
 
 $database = new Database();
-$DVD = new \model\DVD();
+
 // Get all products
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $products = $database->getAllProducts();
@@ -14,29 +18,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
 
-    if (!empty($data) && $data['productType'] === 'DVD') {
-        $result = $database->saveDVD($data);
+    if (!empty($data) && isset($data['productType'])) {
 
-        if ($result) {
-            echo json_encode(array('success' => true));
-        } else {
-            echo json_encode(array('success' => false, 'message' => 'Failed to add product'));
-        }
-    } else if (!empty($data) && $data['productType'] === 'Book') {
-        $result = $database->saveBook($data);
+        $productType = $data['productType'];
+        $path = 'model\\'. $productType;
 
-        if ($result) {
-            echo json_encode(array('success' => true));
-        } else {
-            echo json_encode(array('success' => false, 'message' => 'Failed to add product'));
-        }
-    } else if (!empty($data) && $data['productType'] === 'Furniture') {
-        $result = $database->saveFurniture($data);
+        if (class_exists($path)) {
+            $product = new $path();
+            $result = $database->saveProduct($product, $data);
 
-        if ($result) {
-            echo json_encode(array('success' => true));
+            if ($result) {
+                echo json_encode(array('success' => true, 'message' => 'Product added successfully'));
+            } else {
+                echo json_encode(array('success' => false, 'message' => 'Failed to add product'));
+            }
         } else {
-            echo json_encode(array('success' => false, 'message' => 'Failed to add product'));
+            echo json_encode(array('success' => false, 'message' => 'Invalid product type: ' . $path));
         }
     } else {
         echo json_encode(array('success' => false, 'message' => 'Invalid product data'));

@@ -32,6 +32,19 @@ class Database {
         }
     }
 
+    public function saveProduct($product,array $data)
+    {
+        $type = new $product;
+        $this->sanitize($data);
+
+        if ($this->ifProductExist($data['sku'])) {
+            $sql = $type->save($data);
+            return $this->executeQuery($sql);
+        } else {
+            return false;
+        }
+    }
+
     public function deleteProducts($ids) {
         $placeholders = implode(', ', array_fill(0, count($ids), '?'));
 
@@ -39,50 +52,28 @@ class Database {
         $stmt = $this->connection->prepare($sql);
 
         if ($stmt) {
-            $stmt->execute($ids);
+            $stmt->execute();
             return true;
         } else {
             return false;
         }
     }
 
-    public function saveDVD($product)
-    {
-        $sku = $this->sanitize($product['sku']);
-        $name = $this->sanitize($product['name']);
-        $price = $this->sanitize($product['price']);
-        $type = $this->sanitize($product['productType']);
-        $size = $this->sanitize($product['size']);
+    private function ifProductExist($sku) {
+        $sql = "SELECT COUNT(*) as count FROM products WHERE sku = '$sku'";
+        $result = $this->connection->query($sql);
 
-        $sql = "INSERT INTO products (sku, name, price, type, size) VALUES ('$sku', '$name', '$price', '$type', '$size')";
-        return $this->executeQuery($sql);
-    }
+        if ($result) {
+            $count = $result->fetch_assoc()['count'];
 
-    public function saveBook($product)
-    {
-        $sku = $this->sanitize($product['sku']);
-        $name = $this->sanitize($product['name']);
-        $price = $this->sanitize($product['price']);
-        $type = $this->sanitize($product['productType']);
-        $weight = $this->sanitize($product['weight']);
-
-        $sql = "INSERT INTO products (sku, name, price, type, weight) VALUES ('$sku', '$name', '$price', '$type', '$weight')";
-        return $this->executeQuery($sql);
-    }
-
-    public function saveFurniture($product)
-    {
-        $sku = $this->sanitize($product['sku']);
-        $name = $this->sanitize($product['name']);
-        $price = $this->sanitize($product['price']);
-        $type = $this->sanitize($product['productType']);
-        $height = $this->sanitize($product['height']);
-        $width = $this->sanitize($product['width']);
-        $length = $this->sanitize($product['length']);
-
-        $sql = "INSERT INTO products (sku, name, price, type, height, width, length) 
-                VALUES ('$sku', '$name', '$price', '$type', '$height', '$width', '$length')";
-        return $this->executeQuery($sql);
+            if ($count > 0 ) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     private function executeQuery($sql)
@@ -96,7 +87,9 @@ class Database {
     }
 
     private function sanitize($data) {
-        return $this->connection->real_escape_string($data);
+        foreach ($data as $row) {
+            return $this->connection->real_escape_string($row);
+        }
     }
 
     public function __destruct() {

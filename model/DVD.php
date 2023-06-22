@@ -23,9 +23,14 @@ class DVD extends Product
         return 'Size: ' . $this->size . ' MB';
     }
 
-    public function save()
+    public function save($product)
     {
-        $database = new Database();
-        $database->saveDVD($this->sku, $this->name, $this->price, $this->size);
+        $sku = $product['sku'];
+        $name = $product['name'];
+        $price = $product['price'];
+        $type = $product['productType'];
+        $size = $product['size'];
+
+        return  "INSERT INTO products (sku, name, price, type, size) VALUES ('$sku', '$name', '$price', '$type', '$size')";
     }
 }

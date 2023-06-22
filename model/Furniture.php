@@ -45,9 +45,17 @@ class Furniture extends Product
         return 'Dimensions: ' . $this->height . 'x' . $this->width . 'x' . $this->length;
     }
 
-    public function save()
+    public function save($product)
     {
-        $database = new Database();
-        $database->saveFurniture($this->sku, $this->name, $this->price, $this->height, $this->width, $this->length);
+        $sku = $product['sku'];
+        $name = $product['name'];
+        $price = $product['price'];
+        $type = $product['productType'];
+        $height = $product['height'];
+        $width = $product['width'];
+        $length = $product['length'];
+
+        return  "INSERT INTO products (sku, name, price, type, height, width, length) 
+                VALUES ('$sku', '$name', '$price', '$type', '$height', '$width', '$length')";
     }
 }
