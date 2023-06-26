@@ -46,13 +46,10 @@ class Database {
     }
 
     public function deleteProducts($ids) {
-        $placeholders = implode(', ', array_fill(0, count($ids), '?'));
+        $idsList = implode("', '", $ids);
+        $sql = "DELETE FROM products WHERE id IN ('$idsList')";
 
-        $sql = "DELETE FROM products WHERE id IN ($placeholders)";
-        $stmt = $this->connection->prepare($sql);
-
-        if ($stmt) {
-            $stmt->execute();
+        if ($this->connection->query($sql) === true) {
             return true;
         } else {
             return false;
