@@ -188,6 +188,7 @@ $(document).ready(function () {
     var productType = $('#productType').val();
 
     var productData = {
+      action: 'addProduct',
       sku: sku,
       name: name,
       price: price,
@@ -201,8 +202,8 @@ $(document).ready(function () {
       data: JSON.stringify(productData),
       success: function (response) {
         // Handle the success response
-          closeAddProductModal();
-          loadProductList();
+         // closeAddProductModal();
+          //loadProductList();
           console.log('Product added successfully');
       },
       error: function () {
@@ -227,11 +228,12 @@ $(document).ready(function () {
       return;
     }
     var deleteData = {
+      action: 'deleteProducts',
       products: selectedProducts
     };
     $.ajax({
       url: 'api.php',
-      method: 'DELETE',
+      method: 'POST',
       data: JSON.stringify(deleteData),
       success: function (response) {
         // Handle the success response
