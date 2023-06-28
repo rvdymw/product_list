@@ -117,6 +117,10 @@ $(document).ready(function () {
     closeAddProductModal();
   })
 
+  function showMessage(message) {
+    $('#product-form').append('<div style="border: 1px solid red; padding: 5px;"><p style="color: red">' + message + '</p></div>');
+  }
+
   // Function to load the product list from the API
   function loadProductList() {
     $.ajax({
@@ -201,10 +205,15 @@ $(document).ready(function () {
       method: 'POST',
       data: JSON.stringify(productData),
       success: function (response) {
+        var parsedResponse = JSON.parse(response);
         // Handle the success response
-         // closeAddProductModal();
-          //loadProductList();
+        if (parsedResponse.success === true) {
+          closeAddProductModal();
+          loadProductList();
           console.log('Product added successfully');
+        } else {
+          showMessage(parsedResponse.message);
+        }
       },
       error: function () {
         console.log('Error occurred while adding the product');

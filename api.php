@@ -32,10 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $product = new $path();
                     $result = $database->saveProduct($product, $data);
 
-                    if ($result) {
-                        echo json_encode(array('success' => true, 'message' => 'Product added successfully'));
+                    if ($result === 'SKU already used!') {
+                        echo json_encode(array('success' => false, 'message' => $result));
                     } else {
-                        echo json_encode(array('success' => false, 'message' => 'Failed to add product'));
+                        echo json_encode(array('success' => true, 'message' => 'Product added successfully'));
                     }
                 } else {
                     echo json_encode(array('success' => false, 'message' => 'Invalid product type: ' . $path));
