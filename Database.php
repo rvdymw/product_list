@@ -41,7 +41,7 @@ class Database {
             $sql = $type->save($data);
             return $this->executeQuery($sql);
         } else {
-            return false;
+            return 'SKU already used!';
         }
     }
 
